@@ -5,10 +5,10 @@ read -p "Enter first number: " a
 read -p "Enter first number: " b
 read -p "Enter first number: " c
 
-Operations[first_operation]=`echo $a+$b*$c | bc -l | awk '{printf "%.2f",$1}'`
-Operations[sec_operation]=`echo $a*$b+$c | bc -l | awk '{printf "%.2f",$1}'`
-Operations[third_operation]=`echo $c+$a/$b | bc -l | awk '{printf "%.2f",$1}'`
-Operations[fourth_operation]=`echo $a%$b+$c | bc -l | awk '{printf "%.2f",$1}'`
+Operations[first_operation]=$(($a+$b*$c))
+Operations[sec_operation]=$(($a*$b+$c))
+Operations[third_operation]=$(($c+$a/$b))
+Operations[fourth_operation]=$(($a%$b+$c))
 
 i=0
 Operation_values[i++]=${Operations[first_operation]}
@@ -24,7 +24,7 @@ do
 	for((j=0; j<len-i-1; j++))
 	do
 
-		if [ ${Operation_values[$j]} -lt ${Operation_values[$(($j+1))]} ]
+		if [ ${Operation_values[j]} -le ${Operation_values[$(($j+1))]} ]
 		then
 			temp=${Operation_values[$j]}
 			Operation_values[$j]=${Operation_values[$(($j+1))]}
@@ -32,6 +32,26 @@ do
 		fi
 	done
 done
+echo ${Operation_values[@]}
+
+#sorting the array in ascending order
+
+len=${#Operation_values[@]}
+for ((i=0; i<len; i++))
+do
+	for((j=0; j<len-i-1; j++))
+	do
+
+		if [ ${Operation_values[$j]} -gt ${Operation_values[$(($j+1))]} ]
+		then
+			temp=${Operation_values[$j]}
+			Operation_values[$j]=${Operation_values[$(($j+1))]}
+			Operation_values[$(($j+1))]=$temp
+		fi
+	done
+done
+
+
 echo ${Operation_values[*]}
 
 
